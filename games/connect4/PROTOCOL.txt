@@ -1,0 +1,474 @@
+The game invokes the players and first sends ASSIGN_PLAYER message.
+Then it sends game state information (initially empty board) using
+the GAMESTATE message. Then it takes turn asking for moves using
+the REQUEST_MOVE function. The players respond with an integer [0,7]
+indicating which column to drop a token in. Watch a game between
+random bots for example. To do this, run:
+
+./games/connect4/GAME.py ./clients/connect4/bot-random.py ./clients/connect4/bot-random.py
+
+ASSIGN_PLAYER: <id>\n
+
+The id is either {'0', '1'} denoting whether the player is player0
+or player1. Player0 moves first.
+
+GAMESTATE: <encoding>\n
+
+The encoding string has three possible characters: {'-', 'X', 'O'} 
+denoting {empty square, player0's token, player1's token. There are
+64 characters, essentially reading the board off left-to-right, top-
+to-bottom. For example, the board:
+
+- - - - - - - X 
+- X - - - - - X 
+- X - X - - - X 
+- O - O - - - O 
+X X - O - - - X 
+X O - O - - O X 
+O X X X - O O O 
+O O X O O O X X 
+
+Would be sent with the message:
+"GAMESTATE: -------X-X-----X-X-X---X-O-O---OXX-O---XXO-O--OXOXXX-OOOOOXOOOXX\n"
+
+REQUEST_MOVE\n
+
+The player responds with an integer and newline denoting which column [0,7] to
+move into. In the above example, "4\n" is a winning move for either player.
+
+Here's a full game being played, for reference:
+
+requesting move from player0
+got reply from player0: 0
+
+player0 moves to (7,0)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X - - - - - - - 
+
+broadcasting: GAMESTATE: --------------------------------------------------------X-------
+requesting move from player1
+got reply from player1: 6
+
+player1 moves to (7,6)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X - - - - - O - 
+
+broadcasting: GAMESTATE: --------------------------------------------------------X-----O-
+requesting move from player0
+got reply from player0: 2
+
+player0 moves to (7,2)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X - X - - - O - 
+
+broadcasting: GAMESTATE: --------------------------------------------------------X-X---O-
+requesting move from player1
+got reply from player1: 3
+
+player1 moves to (7,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X - X O - - O - 
+
+broadcasting: GAMESTATE: --------------------------------------------------------X-XO--O-
+requesting move from player0
+got reply from player0: 7
+
+player0 moves to (7,7)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X - X O - - O X 
+
+broadcasting: GAMESTATE: --------------------------------------------------------X-XO--OX
+requesting move from player1
+got reply from player1: 1
+
+player1 moves to (7,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+X O X O - - O X 
+
+broadcasting: GAMESTATE: --------------------------------------------------------XOXO--OX
+requesting move from player0
+got reply from player0: 1
+
+player0 moves to (6,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- X - - - - - - 
+X O X O - - O X 
+
+broadcasting: GAMESTATE: -------------------------------------------------X------XOXO--OX
+requesting move from player1
+got reply from player1: 0
+
+player1 moves to (6,0)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+O X - - - - - - 
+X O X O - - O X 
+
+broadcasting: GAMESTATE: ------------------------------------------------OX------XOXO--OX
+requesting move from player0
+got reply from player0: 5
+
+player0 moves to (7,5)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+O X - - - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: ------------------------------------------------OX------XOXO-XOX
+requesting move from player1
+got reply from player1: 1
+
+player1 moves to (5,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- O - - - - - - 
+O X - - - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: -----------------------------------------O------OX------XOXO-XOX
+requesting move from player0
+got reply from player0: 3
+
+player0 moves to (6,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- O - - - - - - 
+O X - X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: -----------------------------------------O------OX-X----XOXO-XOX
+requesting move from player1
+got reply from player1: 2
+
+player1 moves to (6,2)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- O - - - - - - 
+O X O X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: -----------------------------------------O------OXOX----XOXO-XOX
+requesting move from player0
+got reply from player0: 3
+
+player0 moves to (5,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- O - X - - - - 
+O X O X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: -----------------------------------------O-X----OXOX----XOXO-XOX
+requesting move from player1
+got reply from player1: 0
+
+player1 moves to (5,0)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: ----------------------------------------OO-X----OXOX----XOXO-XOX
+requesting move from player0
+got reply from player0: 3
+
+player0 moves to (4,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: -----------------------------------X----OO-X----OXOX----XOXO-XOX
+requesting move from player1
+got reply from player1: 3
+
+player1 moves to (3,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- - - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O - X O X 
+
+broadcasting: GAMESTATE: ---------------------------O-------X----OO-X----OXOX----XOXO-XOX
+requesting move from player0
+got reply from player0: 4
+
+player0 moves to (7,4)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- - - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------------------------O-------X----OO-X----OXOX----XOXOXXOX
+requesting move from player1
+got reply from player1: 1
+
+player1 moves to (4,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- O - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------------------------O-----O-X----OO-X----OXOX----XOXOXXOX
+requesting move from player0
+got reply from player0: 0
+
+player0 moves to (4,0)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------------------------O----XO-X----OO-X----OXOX----XOXOXXOX
+requesting move from player1
+got reply from player1: 3
+
+player1 moves to (2,3)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- - - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: -------------------O-------O----XO-X----OO-X----OXOX----XOXOXXOX
+requesting move from player0
+got reply from player0: 1
+
+player0 moves to (3,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X - - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: -------------------O-----X-O----XO-X----OO-X----OXOX----XOXOXXOX
+requesting move from player1
+got reply from player1: 4
+
+player1 moves to (6,4)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- - - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X O - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: -------------------O-----X-O----XO-X----OO-X----OXOXO---XOXOXXOX
+requesting move from player0
+got reply from player0: 1
+
+player0 moves to (2,1)
+
+current board:
+- - - - - - - - 
+- - - - - - - - 
+- X - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X O - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: -----------------X-O-----X-O----XO-X----OO-X----OXOXO---XOXOXXOX
+requesting move from player1
+got reply from player1: 1
+
+player1 moves to (1,1)
+
+current board:
+- - - - - - - - 
+- O - - - - - - 
+- X - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X O - - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------O-------X-O-----X-O----XO-X----OO-X----OXOXO---XOXOXXOX
+requesting move from player0
+got reply from player0: 5
+
+player0 moves to (6,5)
+
+current board:
+- - - - - - - - 
+- O - - - - - - 
+- X - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X - - - - 
+O X O X O X - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------O-------X-O-----X-O----XO-X----OO-X----OXOXOX--XOXOXXOX
+requesting move from player1
+got reply from player1: 4
+
+player1 moves to (5,4)
+
+current board:
+- - - - - - - - 
+- O - - - - - - 
+- X - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O - X O - - - 
+O X O X O X - - 
+X O X O X X O X 
+
+broadcasting: GAMESTATE: ---------O-------X-O-----X-O----XO-X----OO-XO---OXOXOX--XOXOXXOX
+requesting move from player0
+got reply from player0: 2
+
+player0 moves to (5,2)
+
+current board:
+- - - - - - - - 
+- O - - - - - - 
+- X - O - - - - 
+- X - O - - - - 
+X O - X - - - - 
+O O X X O - - - 
+O X O X O X - - 
+X O X O X X O X 
+
+player0 wins!
+OUTCOME: 0
+
